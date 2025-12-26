@@ -1,0 +1,55 @@
+body {
+  background: radial-gradient(#300,#000);
+  font-family: Tahoma;
+  text-align: center;
+  color: gold;
+}
+
+h1 { margin: 15px; }
+
+#counter {
+  font-size: 40px;
+  background: black;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px auto;
+  width: 150px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 10px;
+  justify-content: center;
+  margin: 20px;
+}
+
+.slot {
+  background: black;
+  border: 3px solid gold;
+  border-radius: 15px;
+  font-size: 40px;
+  padding: 20px;
+}
+
+.bets button {
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: none;
+  font-size: 18px;
+}
+
+#play {
+  background: gold;
+  padding: 15px 40px;
+  font-size: 22px;
+  border-radius: 15px;
+  border: none;
+  margin-top: 15px;
+}
+
+.info {
+  margin-top: 15px;
+  font-size: 18px;
+}

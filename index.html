@@ -1,61 +1,227 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>Fruit Casino</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #2b0000, #000);
-      color: #fff;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 30px;
-      color: gold;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      max-width: 320px;
-      margin: 30px auto;
-    }
-    .cell {
-      background: #111;
-      border: 2px solid gold;
-      border-radius: 12px;
-      padding: 20px;
-      font-size: 32px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 12px 30px;
-      font-size: 18px;
-      border-radius: 10px;
-      border: none;
-      background: gold;
-      color: #000;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فاكهة الحظ</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:radial-gradient(circle at top,#5a0000,#120000);
+  color:#fff;
+  text-align:center;
+}
+h1{color:#ffd700;text-shadow:0 0 15px #ff0}
+
+/* ===== الماكينة ===== */
+.machine{
+  width:360px;margin:auto;
+  background:linear-gradient(#4a0000,#1a0000);
+  border-radius:25px;padding:15px;
+  box-shadow:0 0 30px #000 inset;
+}
+
+/* ===== العدّاد ===== */
+.counter{
+  font-size:40px;font-family:monospace;
+  background:#000;color:#ff0;
+  padding:10px;border-radius:10px;
+  box-shadow:0 0 10px #ff0;
+}
+
+/* ===== الشبكة ===== */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.slot{
+  height:90px;background:#111;
+  border:3px solid #ffd700;
+  border-radius:15px;
+  font-size:40px;
+  display:flex;align-items:center;justify-content:center;
+}
+.spin{animation:spin .12s linear infinite}
+@keyframes spin{to{transform:translateY(-12px)}}
+
+/* ===== رهانات ===== */
+.bets{display:flex;margin:10px 0}
+.bet{
+  flex:1;margin:0 3px;
+  padding:10px;background:#ffd700;
+  color:#000;border-radius:12px;
+  font-weight:bold;cursor:pointer
+}
+.bet.active{background:#00ffcc}
+
+/* ===== زر ===== */
+button{
+  width:100%;padding:15px;
+  font-size:20px;border:none;
+  border-radius:15px;
+  background:#ffcc00;font-weight:bold
+}
+
+/* ===== الفوز ===== */
+.win{animation:flash .3s infinite}
+@keyframes flash{
+  0%{box-shadow:0 0 20px red}
+  50%{box-shadow:0 0 20px yellow}
+  100%{box-shadow:0 0 20px orange}
+}
+
+/* ===== شاشة الفوز ===== */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;align-items:center;justify-content:center;
+}
+.popup{
+  background:#200;
+  padding:30px;border-radius:20px;
+  box-shadow:0 0 30px gold;
+}
+
+/* ===== السجل ===== */
+.history{
+  margin-top:10px;font-size:13px;
+  max-height:120px;overflow:auto;
+  text-align:right
+}
+
+/* ===== لوحة التحكم ===== */
+.panel{
+  margin-top:10px;
+  background:#111;padding:10px;
+  border-radius:10px;font-size:12px
+}
+.panel input{width:50px}
+</style>
 </head>
+
 <body>
 
-<h1>🍒 Fruit Casino 🍉</h1>
+<h1>🍒 فاكهة الحظ 🍉</h1>
 
-<div class="grid">
-  <div class="cell">🍒</div>
-  <div class="cell">🍋</div>
-  <div class="cell">🍇</div>
-  <div class="cell">🍉</div>
-  <div class="cell">🍊</div>
-  <div class="cell">🍎</div>
+<div class="machine">
+  <div class="counter" id="counter">0000</div>
+
+  <div class="grid">
+    <div class="slot">🍒</div><div class="slot">🍋</div><div class="slot">🍇</div>
+    <div class="slot">🍉</div><div class="slot">🍊</div><div class="slot">🍎</div>
+  </div>
+
+  <div class="bets">
+    <div class="bet active" data-bet="10">10</div>
+    <div class="bet" data-bet="100">100</div>
+    <div class="bet" data-bet="200">200</div>
+  </div>
+
+  <button id="play">ابدأ اللعب</button>
+
+  <div style="display:flex;justify-content:space-between;font-size:14px">
+    <div>💰 <span id="balance">1000</span></div>
+    <div>💎 x<span id="multi">1</span></div>
+  </div>
+
+  <div class="history" id="history"></div>
+
+  <div class="panel">
+    📊 نسب الفوز:<br>
+    🍒 <input id="w0" value="0.25">
+    🍋 <input id="w1" value="0.22">
+    🍇 <input id="w2" value="0.18">
+    🍉 <input id="w3" value="0.15">
+    🍊 <input id="w4" value="0.12">
+    🍎 <input id="w5" value="0.08">
+  </div>
 </div>
 
-<button>ابدأ اللعب</button>
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <h2 id="winText">🎉 فزت</h2>
+    <button onclick="overlay.style.display='none'">موافق</button>
+  </div>
+</div>
+
+<!-- ===== الأصوات ===== -->
+<audio id="spinS" src="sounds/spin.mp3"></audio>
+<audio id="winS" src="sounds/win.mp3"></audio>
+<audio id="loseS" src="sounds/lose.mp3"></audio>
+
+<script>
+const fruits=[
+ {i:"🍒",p:5},{i:"🍋",p:5},{i:"🍇",p:5},
+ {i:"🍉",p:15},{i:"🍊",p:25},{i:"🍎",p:45}
+];
+const slots=document.querySelectorAll(".slot");
+const bets=document.querySelectorAll(".bet");
+const hist=document.getElementById("history");
+const overlay=document.getElementById("overlay");
+const winText=document.getElementById("winText");
+
+let balance=1000,bet=10,multi=1,spinning=false;
+const spinS=spinS||document.getElementById("spinS");
+const winS=document.getElementById("winS");
+const loseS=document.getElementById("loseS");
+
+bets.forEach(b=>b.onclick=()=>{
+  bets.forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");bet=+b.dataset.bet;
+});
+
+play.onclick=()=>{
+  if(spinning||balance<bet)return;
+  balance-=bet;update();
+  spinning=true;multi=Math.random()<.2?3:1;
+  slots.forEach(s=>s.classList.add("spin"));
+  spinS.play();
+  let t=0;
+  const iv=setInterval(()=>{
+    slots.forEach(s=>s.textContent=randomFruit().i);
+    if(++t>18){
+      clearInterval(iv);
+      slots.forEach(s=>s.classList.remove("spin"));
+      spinning=false;checkWin();
+    }
+  },90);
+};
+
+function randomFruit(){
+  const w=[w0,w1,w2,w3,w4,w5].map(i=>+i.value);
+  let r=Math.random(),s=0;
+  for(let i=0;i<w.length;i++){
+    s+=w[i]; if(r<=s) return fruits[i];
+  }
+  return fruits[0];
+}
+
+function checkWin(){
+  const v=[...slots].map(s=>s.textContent);
+  if(v.every(x=>x===v[0])){
+    const f=fruits.find(x=>x.i===v[0]);
+    const win=bet*f.p*multi;
+    balance+=win;
+    winText.textContent=`🎉 ربحت ${win}`;
+    overlay.style.display="flex";
+    winS.play();
+    addHistory(`فوز +${win}`);
+  }else{
+    loseS.play();
+    addHistory(`خسارة -${bet}`);
+  }
+  update();
+}
+
+function addHistory(t){
+  hist.innerHTML=`${t}<br>`+hist.innerHTML;
+}
+
+function update(){
+  balanceEl.textContent=balance;
+  counter.textContent=String(balance).padStart(4,"0");
+  multiEl.textContent=multi;
+}
+</script>
 
 </body>
 </html>
